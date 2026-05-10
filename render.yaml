@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: html-to-image
+    env: node
+    buildCommand: npm install
+    startCommand: node index.js
+    plan: free
