@@ -1,5 +1,6 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 
 const app = express();
 app.use(express.json({ limit: '10mb' }));
@@ -14,17 +15,13 @@ app.post('/screenshot', async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu'
-      ]
+      args: chromium.args,
+      defaultViewport: { width: 800, height: 600, deviceScaleFactor: 2 },
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
 
     const page = await browser.newPage();
-    await page.setViewport({ width: 800, height: 1, deviceScaleFactor: 2 });
     await page.setContent(html, { waitUntil: 'networkidle2', timeout: 30000 });
 
     const screenshot = await page.screenshot({ fullPage: true, type: 'png' });
