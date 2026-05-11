@@ -14,13 +14,14 @@ app.post('/screenshot', async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      headless: 'new',
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage'
-      ],
-      headless: 'new'
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+      ]
     });
 
     const page = await browser.newPage();
@@ -39,5 +40,7 @@ app.post('/screenshot', async (req, res) => {
   }
 });
 
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Servidor listo en puerto ${PORT}`));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor listo en puerto ${PORT}`));
