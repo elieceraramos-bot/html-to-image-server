@@ -15,7 +15,6 @@ app.post('/screenshot', async (req, res) => {
   try {
     browser = await puppeteer.launch({
       headless: 'new',
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -40,7 +39,5 @@ app.post('/screenshot', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor listo en puerto ${PORT}`));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor listo en puerto ${PORT}`));
