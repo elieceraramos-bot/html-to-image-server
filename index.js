@@ -1,27 +1,27 @@
 const express = require('express');
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+const puppeteer = require('puppeteer');
 
 const app = express();
 app.use(express.json({ limit: '10mb' }));
 
 app.post('/screenshot', async (req, res) => {
   const { html } = req.body;
-
-  if (!html) {
-    return res.status(400).json({ error: 'Falta el campo html' });
-  }
+  if (!html) return res.status(400).json({ error: 'Falta el campo html' });
 
   let browser;
   try {
     browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: { width: 800, height: 600, deviceScaleFactor: 2 },
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+      ]
     });
 
     const page = await browser.newPage();
+    await page.setViewport({ width: 800, height: 600, deviceScaleFactor: 2 });
     await page.setContent(html, { waitUntil: 'networkidle2', timeout: 30000 });
 
     const screenshot = await page.screenshot({ fullPage: true, type: 'png' });
@@ -37,4 +37,4 @@ app.post('/screenshot', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor listo en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Listo en puerto ${PORT}`));
