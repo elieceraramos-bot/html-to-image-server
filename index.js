@@ -16,7 +16,8 @@ app.post('/screenshot', async (req, res) => {
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
-        '--disable-gpu'
+        '--disable-gpu',
+        '--single-process'
       ]
     });
 
